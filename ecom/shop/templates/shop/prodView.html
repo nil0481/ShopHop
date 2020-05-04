@@ -1,0 +1,64 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} {{product.product_name}}--ShopHop {% endblock %}
+
+{% block body %}
+<div class="container my-4">
+      <div class="row">
+        <div class="col md-4">
+
+            <img src="/media/{{product.image}}" width="320px">
+            <div class="col mx-4">
+                <h4><p class="text-danger"><b>Only few items left!!!!</b></p> </h4>
+        </div>
+
+            <div class="row mt-5">
+                <button class="btn btn-primary mx-5 ">Buy Now</button>
+                <button class="btn btn-primary">Add to Cart</button>
+            </div>
+        </div>
+
+
+        <div class="col md-8">
+            <h4>{{product.product_name}}</h4>
+            <p><b> <h6>Price: Rs. {{product.price}}.00</h6></b> </p>
+            <p>{{product.desc}}</p>
+        </div>
+      </div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    console.log('dsdf');
+    if (localStorage.getItem('cart')==null) {
+    var cart={};
+    }
+    else{
+    cart=JSON.parse(localStorage.getItem('cart'));
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    }
+
+    $('.cart').click(function(){
+
+    var idstr=this.id.toString();
+     console.log(idstr)
+     if (cart[idstr] != undefined){
+    cart[idstr]+=1;                                                // if cart has item then +1
+    }
+    else {
+    cart[idstr]=1;
+    }
+    console.log(cart)
+
+    localStorage.setItem('cart',JSON.stringify(cart));          // store even if page is reloaded
+     document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    });
+
+    $('#popcart').popover()
+
+    document.getElementById('popcart').setAttribute('data-content', '<h6>Show Cart items </h6>');
+
+
+</script>
+{% endblock %}
