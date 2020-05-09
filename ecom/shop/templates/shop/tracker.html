@@ -1,5 +1,118 @@
 {% extends 'shop/basic.html' %}
+{% block title%} Order Tracker{% endblock %}
+ {% block css %}
 
-{% block title %} Track your Order {% endblock %}
+    .head{
+          justify-content: center;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            color: purple;
 
-{% block body %} body {% endblock %}
+    }
+
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col my-4">
+        <div class="col head">
+            <h2>Enter your Order Id and Email address to track your order</h2>
+        </div>
+        <form method="post" action="#" id="trackerForm">{% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputname">Order Id</label>
+                    <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <button type="submit" class="btn btn-primary">Track Order</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col my-4">
+        <div class="col head">
+            <h2>Your Order Status</h2>
+        </div>
+        <div class="my-4">
+            <ul class="list-group" id="items" >
+            	<h5 style="text-align:center"> Enter your order Id and Email and click Track Order to find details about your order!</h5>
+            </ul>
+        </div>
+
+        <div class="col head">
+            <h2>Your Order Details</h2>
+        </div>
+        <div class="my-4">
+            <ul class="list-group" id="citems" >
+
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+$('#trackerForm').submit(function(event) {
+    $('#items').empty();
+    var formData = {
+        'orderId': $('input[name=orderId]').val(),
+        'email': $('input[name=email]').val(),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+        .done(function(data) {
+            console.log(data)
+            data=JSON.parse(data);
+            updates = data[0];
+            if (updates.length > 0 & updates != {}) {
+                for (i = 0; i < updates.length; i++) {
+                    let text = updates[i]['text'];
+                    let time = updates[i]['time'];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${text}
+                    <span class="badge badge-primary badge-pill">${time}</span>
+                </li>`
+                    $('#items').append(mystr);
+                }
+            } else {
+            	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    <h5 style="text-align:center">Sorry, We are not able to fetch this order id and email.
+                    Make sure to type correct order Id and email...<h5 style="text-align:center"></li>`
+            	$('#items').append(mystr);
+            }
+
+            // order details..................
+            cart=JSON.parse(data[1]);                                         // items_json is a string so convert in json
+            console.log(cart);
+
+            // copied from checkout.html
+            for (var item in cart){
+                let qty= cart[item][0];
+                let name= cart[item][1];
+
+                //copied from above ul and deleted above
+                mystr=`<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${name}
+                        <span class="badge badge-primary badge-pill">${qty}</span>
+                      </li>`
+                $('#citems').append(mystr);
+            }
+
+
+
+
+
+        });
+    event.preventDefault();
+});
+</script>
+{% endblock %}
