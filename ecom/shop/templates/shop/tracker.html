@@ -1,5 +1,5 @@
 {% extends 'shop/basic.html' %}
-{% block title%} Order Tracker{% endblock %}
+{% block title%}ShopHop-Order Tracker{% endblock %}
  {% block css %}
 
     .head{
@@ -15,9 +15,7 @@
 {% block body %}
 <div class="container">
     <div class="col my-4">
-        <div class="col head">
-            <h2>Enter your Order Id and Email address to track your order</h2>
-        </div>
+        <h2 class="head">Enter your Order Id and Email address to track your order</h2>
         <form method="post" action="#" id="trackerForm">{% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -32,23 +30,16 @@
             </div>
         </form>
     </div>
-
     <div class="col my-4">
-        <div class="col head">
-            <h2>Your Order Status</h2>
-        </div>
+        <h2 class="head">Your Order Status</h2>
         <div class="my-4">
-            <ul class="list-group" id="items" >
-            	<h5 style="text-align:center"> Enter your order Id and Email and click Track Order to find details about your order!</h5>
+            <ul class="list-group" id="items">
+                Enter your order Id and Email and click Track Order to find details about your order!
             </ul>
         </div>
-
-        <div class="col head">
-            <h2>Your Order Details</h2>
-        </div>
+        <h2 class="head">Your Order Details</h2>
         <div class="my-4">
-            <ul class="list-group" id="citems" >
-
+            <ul class="list-group" id="citems">
             </ul>
         </div>
     </div>
@@ -70,10 +61,11 @@ $('#trackerForm').submit(function(event) {
             encode: true
         })
         .done(function(data) {
+            $('#citems').empty();
             console.log(data)
-            data=JSON.parse(data);
-            updates = data[0];
-            if (updates.length > 0 & updates != {}) {
+            data = JSON.parse(data);
+            if (data['status'] == 'success') {
+                updates = data['updates'];
                 for (i = 0; i < updates.length; i++) {
                     let text = updates[i]['text'];
                     let time = updates[i]['time'];
@@ -83,34 +75,24 @@ $('#trackerForm').submit(function(event) {
                 </li>`
                     $('#items').append(mystr);
                 }
+                // Fill in the order details
+                cart = JSON.parse(data['itemsJson']);
+                console.log(cart);
+                for (item in cart) {
+                    let name = cart[item][1];
+                    let qty = cart[item][0];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill">${qty}</span>
+                </li>`
+                    $('#citems').append(mystr);
+                }
             } else {
-            	mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                    <h5 style="text-align:center">Sorry, We are not able to fetch this order id and email.
-                    Make sure to type correct order Id and email...<h5 style="text-align:center"></li>`
-            	$('#items').append(mystr);
-            }
-
-            // order details..................
-            cart=JSON.parse(data[1]);                                         // items_json is a string so convert in json
-            console.log(cart);
-
-            // copied from checkout.html
-            for (var item in cart){
-                let qty= cart[item][0];
-                let name= cart[item][1];
-
-                //copied from above ul and deleted above
-                mystr=`<li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${name}
-                        <span class="badge badge-primary badge-pill">${qty}</span>
-                      </li>`
+                mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    Sorry, We are not able to fetch this order id and email. Make sure to type correct order Id and email</li>`
+                $('#items').append(mystr);
                 $('#citems').append(mystr);
             }
-
-
-
-
-
         });
     event.preventDefault();
 });

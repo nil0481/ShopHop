@@ -42,6 +42,7 @@
     <div>
          <form method="post" action="/shop/checkout/"> {% csrf_token %}
              <input type="hidden" name="itemsJson" id="itemsJson">
+             <input type="hidden" name="amount" id="amount">
               <div class="form-row">
                   <div class="form-group col-md-6">
                   <label for="inputname">Name</label>
@@ -99,7 +100,7 @@
     }
     else{
     cart=JSON.parse(localStorage.getItem('cart'));
-
+    console.log(cart);
     }
     var sum=0;
     var totalPrice=0;
@@ -134,6 +135,8 @@
             document.location='/shop';
         }
     {% endif %}
+
+    $('#amount').val($('#totalPrice').html())                            // setting value of totalprice to amount hidden input for db
 </script>
 
 

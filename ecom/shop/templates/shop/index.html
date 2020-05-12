@@ -1,5 +1,5 @@
 {% extends 'shop/basic.html' %}
-
+{% block title %} ShopHop {% endblock %}
  {% block css %}
           .col-md-3
           {
@@ -92,7 +92,8 @@
                       <div class="card-body">
                         <h6 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h6>
                           <p class="card-text"><b>Rs.</b>
-                              <b><span id="pricepr{{i.id}}">{{i.price}}</span></b><b>.00</b></p>
+                              <b><span id="pricepr{{i.id}}">{{i.price}}</span></b><b>.00</b>
+                          </p>
 
                           <span id="divpr{{i.id}}" class="divpr">
                               <button id="pr{{i.id}}" class="btn btn-warning cart"><b>Add to Cart</b></button>
@@ -142,7 +143,8 @@
     updateCart(cart);
     }
 
-    $('.cart').click(function(){
+    //$('.cart').click(function(){
+    $('.divpr').on('click', 'button.cart', function(){
         var idstr=this.id.toString();
         console.log(idstr)
         if (cart[idstr] != undefined){
@@ -182,6 +184,7 @@
     }
 
     //document.getElementById("clearCart").addEventListener("click", clearCart);
+
     function clearCart(){
         cart = JSON.parse(localStorage.getItem('cart'));
         for (var item in cart){
