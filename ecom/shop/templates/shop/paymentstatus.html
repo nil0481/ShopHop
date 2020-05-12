@@ -1,0 +1,98 @@
+{% extends 'shop/basic.html' %}
+{% block title%} ShopHop{% endblock %}
+
+{% block css %}
+
+    .head{
+          justify-content: center;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            background-color: #6d6;
+            color: purple;
+
+    }
+.content{
+          justify-content: center;
+            font-size:24px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+
+
+    }
+
+{% endblock %}
+{% block body %}
+<div class="container">
+<!--   {{response}}-->
+
+    <div class="col my-4">
+
+        <h2 class="head">Payment status regarding your order Id: {{response.ORDERID}} !</h2>
+        {% if response.RESPCODE == '01' %}
+         <h2>Congrats!!!</h2>
+        <div class="content"> Your Order was successful. Use Your Order ID to track the order at the tracker.</div>
+
+        <ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center active">
+  Transaction Details
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Order ID
+    <span class="badge badge-primary badge-pill">{{response.ORDERID}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Transaction Amount
+    <span class="badge badge-primary badge-pill">{{response.TXNAMOUNT}}</span>
+  </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+   Success code
+    <span class="badge badge-primary badge-pill">{{response.RESPMSG}}</span>
+  </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+   Status
+    <span class="badge badge-primary badge-pill">{{response.STATUS}}</span>
+  </li>
+</ul>
+
+        {% else %}
+        <h2>Oops!!!</h2>
+<div class="content"> Your Order failed due to {{response.RESPMSG}} ..</div>
+
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center active">
+  Transaction Details
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Order ID
+    <span class="badge badge-primary badge-pill">{{response.ORDERID}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Transaction Amount
+    <span class="badge badge-primary badge-pill">{{response.TXNAMOUNT}}</span>
+  </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+   Failure Reason
+    <span class="badge badge-primary badge-pill">{{response.RESPMSG}}</span>
+  </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+   Status
+    <span class="badge badge-primary badge-pill">{{response.STATUS}}</span>
+  </li>
+</ul>
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+
+    {% if response.RESPCODE == '01' %}
+       alert('Thanks for ordering. Your Order id is: {{response.ORDERID}} Use it to track your order');
+            localStorage.clear();
+
+        {% endif %}
+</script>
+{% endblock %}
