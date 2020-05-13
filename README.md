@@ -2,6 +2,9 @@
 
 An e-Commerce based Web App. (Python- django, HTML, CSS, Js, Bootstrap). 
 
+Hosted in pythonanywhere http://shophops.pythonanywhere.com/ . 
+
+
 # Features
 
 Category wise items. 
@@ -17,4 +20,6 @@ https://developer.paytm.com/docs/blink-checkout/#demo .
 
 Tracker to track the order.
 
-Contact Page for any query and a simple blog
+Contact Page for any query.
+
+simple Blog with Facebook Like, Comment, Share Plugin
