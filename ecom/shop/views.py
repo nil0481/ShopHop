@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt                # for csrf e
 from PayTm import Checksum
 import json
 # Create your views here.
-MERCHANT_KEY = 'zT8E!v7XrRqu%XiZ';
+
 
 def index(request):
     # products=Product.objects.all()
@@ -114,7 +114,7 @@ def productView(request,myid):
     return render(request, 'shop/prodView.html', {'product': product[0]})   # As product is a list having 1 item only
 
 
-
+MERCHANT_KEY = 'YOUR MERCHANT KEY';
 def checkout(request):
     if request.method == "POST":
         items_json=request.POST.get('itemsJson', '')
@@ -137,7 +137,7 @@ def checkout(request):
         # return render(request, 'shop/checkout.html',{'thank':thank, 'id':id})
         # request paytm for payment
         param_dict={
-            'MID':'MlhzKX58583165425333',
+            'MID':'YOUR MERCHANT ID',
             'ORDER_ID':str(order.order_id),
             'TXN_AMOUNT':str(amount),
             'CUST_ID':email,
